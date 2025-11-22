@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './styles/app_style.dart';
 
-
-
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -53,10 +53,9 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   static const LatLng _italianCentralPoint = LatLng(42.504154, 12.646361);
-  static const String _mapboxUserId = 'petunia1410';
+  final String _mapboxUserId = dotenv.env['MAPBOX_USER_ID'] ?? '';
   String _mapboxStyleId = 'cmi8moylp006d01s99vudhvur';
-  static const String _mapboxAccessToken =
-      'pk.eyJ1IjoicGV0dW5pYTE0MTAiLCJhIjoiY21pN2tjcWpsMDF0ajJtcXpvczZyOWVteSJ9.CJaTI4U0FcMzxxGJYsWZsw';
+  final String _mapboxAccessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ?? '';
 
   late String _mapboxUrlTemplate;
   final TextEditingController _styleIdController = TextEditingController();
@@ -76,7 +75,6 @@ class _MapScreenState extends State<MapScreen> {
       _mapboxStyleId = trimmed;
       _mapboxUrlTemplate =
           'https://api.mapbox.com/styles/v1/$_mapboxUserId/$_mapboxStyleId/tiles/256/{z}/{x}/{y}?access_token=$_mapboxAccessToken';
-      // Aggiorna anche il controller per coerenza (opzionale ma utile)
       _styleIdController.text = _mapboxStyleId;
     });
   }
@@ -90,10 +88,9 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent, // opzionale, ma coerente
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // 🗺️ Mappa: in background (prima nel Stack = sotto)
           FlutterMap(
             options: MapOptions(
               initialCenter: _italianCentralPoint,
@@ -110,14 +107,13 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
 
-          // 📝 Input overlay: in foreground (dopo = sopra)
           Positioned(
             top: 16,
             left: 16,
             right: 16,
             child: Card(
               elevation: 4,
-              color: Colors.white, // leggermente trasparente ma leggibile
+              color: Colors.white,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
               ),
@@ -138,7 +134,7 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     const SizedBox(width: 12),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => _updateMapStyle(_styleIdController.text),
                       child: const Text('Update'),
                     ),
                   ],
@@ -146,6 +142,27 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
+/*           Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Card(
+              elevation: 4,
+              color: AppStyle.primaryColor,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Center(
+                  child: Text(
+                    'Just Another Card',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ),
+            ),
+          ), */
         ],
       ),
     );

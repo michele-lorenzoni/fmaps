@@ -32,12 +32,8 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   static const LatLng _italianCentralPoint = LatLng(42.504154, 12.646361);
-  final String _mapboxUserId = dotenv.env['MAPBOX_USER_ID'] ?? '';
-  String _mapboxStyleId = 'cmi8moylp006d01s99vudhvur';
   final String _mapboxAccessToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ?? '';
-
   late String _mapboxUrlTemplate;
-  final TextEditingController _styleIdController = TextEditingController();
   
   LatLng? _currentPosition;
   bool _isLoadingPosition = true;
@@ -47,8 +43,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     _mapboxUrlTemplate =
-        'https://api.mapbox.com/styles/v1/$_mapboxUserId/$_mapboxStyleId/tiles/256/{z}/{x}/{y}?access_token=$_mapboxAccessToken';
-    _styleIdController.text = _mapboxStyleId;
+        'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/256/{z}/{x}/{y}?access_token=$_mapboxAccessToken';
     _getCurrentLocation();
   }
 
@@ -63,18 +58,12 @@ class _MapScreenState extends State<MapScreen> {
         _isLoadingPosition = false;
       });
     } catch (e) {
-      print('Errore nel recupero della posizione: $e');
+      // print('Errore nel recupero della posizione: $e');
       setState(() {
         _currentPosition = _italianCentralPoint;
         _isLoadingPosition = false;
       });
     }
-  }
-
-  @override
-  void dispose() {
-    _styleIdController.dispose();
-    super.dispose();
   }
 
   @override
@@ -101,7 +90,6 @@ class _MapScreenState extends State<MapScreen> {
             ),
             children: [
               TileLayer(
-                key: ValueKey(_mapboxStyleId),
                 urlTemplate: _mapboxUrlTemplate,
                 userAgentPackageName: 'com.example.flutter_map_example',
               ),

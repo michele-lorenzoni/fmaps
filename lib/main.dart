@@ -71,17 +71,6 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void _updateMapStyle(String newStyleId) {
-    final trimmed = newStyleId.trim();
-    if (trimmed.isEmpty) return;
-    setState(() {
-      _mapboxStyleId = trimmed;
-      _mapboxUrlTemplate =
-          'https://api.mapbox.com/styles/v1/$_mapboxUserId/$_mapboxStyleId/tiles/256/{z}/{x}/{y}?access_token=$_mapboxAccessToken';
-      _styleIdController.text = _mapboxStyleId;
-    });
-  }
-
   @override
   void dispose() {
     _styleIdController.dispose();
@@ -133,42 +122,6 @@ class _MapScreenState extends State<MapScreen> {
                   ],
                 ),
             ],
-          ),
-
-          Positioned(
-            top: 16,
-            left: 16,
-            right: 16,
-            child: Card(
-              elevation: 4,
-              color: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.zero,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _styleIdController,
-                        decoration: const InputDecoration(
-                          labelText: 'Mapbox Style ID',
-                          hintText: 'Enter the Style ID',
-                          isDense: true,
-                        ),
-                        onSubmitted: (value) => _updateMapStyle(value),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: () => _updateMapStyle(_styleIdController.text),
-                      child: const Text('Update'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
         ],
       ),

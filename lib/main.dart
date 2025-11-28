@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import './styles/app_style.dart';
+import './styles/app_theme.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
@@ -15,29 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        primaryColor: AppStyle.primaryColor,
-        scaffoldBackgroundColor: AppStyle.background,
-        cardColor: AppStyle.cardColor,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            shape: AppStyle.buttonShape,
-            backgroundColor: AppStyle.primaryColor,
-            foregroundColor: AppStyle.textColorLight,
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.zero,
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          labelStyle: AppStyle.bodyMedium,
-        ),
-        textTheme: TextTheme(
-          headlineMedium: AppStyle.headlineMedium,
-          bodyMedium: AppStyle.bodyMedium,
-        ),
-      ),
+      theme: AppTheme.lightTheme,
       home: MapScreen(),
       debugShowCheckedModeBanner: false,
     );
@@ -142,27 +120,6 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
-/*           Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Card(
-              elevation: 4,
-              color: AppStyle.primaryColor,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.zero,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Center(
-                  child: Text(
-                    'Just Another Card',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-              ),
-            ),
-          ), */
         ],
       ),
     );

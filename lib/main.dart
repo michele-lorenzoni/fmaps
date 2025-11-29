@@ -3,16 +3,22 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
-import './styles/app_theme.dart';
 
+import './styles/app_theme.dart';
+import 'package:maps_project/core/widgets/custom_bottom_nav_bar.dart';
+
+// Correct
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
+// Correct
 class MyApp extends StatelessWidget {
+  // Chiamata al costruttore StatelessWidget
   const MyApp({super.key});
 
+  // Correct
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,28 +43,35 @@ class _MapScreenState extends State<MapScreen> {
   
   LatLng? _currentPosition;
   bool _isLoadingPosition = true;
+  int _selectedIndex = 0;
+  // Definizione del controllore immutabile della mappa
   final MapController _mapController = MapController();
 
   @override
   void initState() {
     super.initState();
+    // Chiamata API verso la mappa di MapBox
     _mapboxUrlTemplate =
         'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/256/{z}/{x}/{y}?access_token=$_mapboxAccessToken';
+    // Chiamata al metodo _getCurrentLocation
     _getCurrentLocation();
   }
 
   Future<void> _getCurrentLocation() async {
+    // Settaggio dell'accuratezza della posizione
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+    );
+
     try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      // Passaggio dei setting al metodo getCurrentPosition del plugin Geolocator
+      Position position = await Geolocator.getCurrentPosition(locationSettings: locationSettings);
       
       setState(() {
         _currentPosition = LatLng(position.latitude, position.longitude);
         _isLoadingPosition = false;
       });
     } catch (e) {
-      // print('Errore nel recupero della posizione: $e');
       setState(() {
         _currentPosition = _italianCentralPoint;
         _isLoadingPosition = false;
@@ -77,20 +90,21 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           FlutterMap(
+            // Serve per il controllo da parte dell'utente della mappa
             mapController: _mapController,
             options: MapOptions(
               initialCenter: _currentPosition ?? _italianCentralPoint,
-              initialZoom: 13.0,
-              maxZoom: 18.0,
-              minZoom: 5.0,
+              // Zoom sul marker iniziale 
+              initialZoom: 11.0,
             ),
             children: [
               TileLayer(
+                // Correct
                 urlTemplate: _mapboxUrlTemplate,
+                // Correct
                 userAgentPackageName: 'com.example.flutter_map_example',
               ),
               // Marker per la posizione corrente
@@ -98,13 +112,14 @@ class _MapScreenState extends State<MapScreen> {
                 MarkerLayer(
                   markers: [
                     Marker(
+                      // Il punto escalamativo serve per dichiarare la tipologia di variabile con NotNull
                       point: _currentPosition!,
-                      width: 40,
-                      height: 40,
+                      width: 23,
+                      height: 23,
                       child: const Icon(
                         Icons.my_location,
                         color: Colors.blue,
-                        size: 40,
+                        size: 23,
                       ),
                     ),
                   ],
@@ -112,6 +127,15 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
         ],
+      ),
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          // Gestisci la navigazione qui
+        },
       ),
     );
   }

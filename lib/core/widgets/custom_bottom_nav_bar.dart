@@ -25,8 +25,8 @@ class CustomBottomNavBar extends StatelessWidget {
           label: 'Cerca',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profilo',
+          icon: Icon(Icons.show_chart),
+          label: 'Data',
         ),
       ],
     );

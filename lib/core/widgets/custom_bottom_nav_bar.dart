@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maps_project/core/config/navigation_config.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -15,20 +16,7 @@ class CustomBottomNavBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTap,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.map),
-          label: 'Mappa',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Cerca',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.show_chart),
-          label: 'Data',
-        ),
-      ],
+      items: NavigationConfig.navBarItems,
     );
   }
 }

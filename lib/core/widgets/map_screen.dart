@@ -1,4 +1,3 @@
-import 'package:maps_project/core/utils/debug/color_log.dart';
 import 'package:flutter/material.dart';
 import 'package:maps_project/core/widgets/custom_bottom_nav_bar.dart';
 import 'package:maps_project/core/config/navigation_config.dart';
@@ -16,7 +15,6 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    ColorLog.info('MapScreen caricato con ${NavigationConfig.pages.length} pagine');
   }
 
   @override
